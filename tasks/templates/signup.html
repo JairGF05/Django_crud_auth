@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %}
+ 
+{% block content %}
+<h1>Signup</h1>+}
+{# permite reacomodar el formulario en el front #}
+{# Action establece hacia donde se van a enviar los datos cuando se presione un boton #}
+{# con POST la informacion no es enviada por la URL ya si no se ve comprometida #}
+<form action="/signup/" method="POST">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    <button>Signup</button>
+</form>
+
+{% endblock %}
