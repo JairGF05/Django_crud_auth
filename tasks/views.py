@@ -5,12 +5,15 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+#libreria para proteger rutas->login_required
 # Create your views here.
+from django.contrib.auth.decorators import login_required
 
+#El home cualquiera lo puede acceder no es necesario estar logueado
 def home(request):
     return render(request, 'home.html')
 
-
+#Al signup cualquiera puede acceder
 def signup(request):
     """ indicamos que hace si recibe GET o POST"""
 
@@ -55,11 +58,14 @@ def signup(request):
         'form': UserCreationForm,
     })
 
-
+#En tasks hay que estar logueado por lo que requiere protegerla
+@login_required
 def tasks(request):
    return render(request, 'tasks.html')
 
 #funcion para manejar el logout
+#es necesario estar logueado para acceder aqui
+@login_required
 def signout(request):
     logout(request)
     return redirect('home')
@@ -82,11 +88,11 @@ def signin(request):
         if user is None:
             return render(request, 'signin.html', {
             'form':AuthenticationForm,
-            'error': "Username or password is incorrect"
+            'error': "Username or password is incorrect",
             })
         #si el usuario y pass es correcto
         else:
             #guardamos la sesion del usuario que se autenticó correctamente
             login(request, user)
             #redireccionamos a tasks
-            redirect('tasks')
+            return redirect('home')
